@@ -33,6 +33,8 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',serif;min-height:100%;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,0.55) 100%)}
 #canvas{position:fixed;inset:0;pointer-events:none;z-index:1}
 
 /* ENVELOPE */
@@ -48,7 +50,8 @@ body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',se
 /* REVEAL */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s ease,transform 0.9s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-.page{position:relative;z-index:2}
+.page{position:relative;z-index:2;opacity:0}
+.page.revealed{animation:envPageReveal 1s cubic-bezier(0.22,1,0.36,1) forwards}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 24px 60px;text-align:center;position:relative}
@@ -64,113 +67,32 @@ body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',se
 .malli-buds{color:var(--gold);font-size:11px;letter-spacing:5px}
 
 /* ── SLIDESHOW SCENE ── */
-.slideshow-scene{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  max-width:680px;
-  opacity:0;
-  animation:rise 1.3s ease forwards 0.95s;
-}
+
 
 /* Ghost panels */
-.ghost{
-  flex-shrink:0;
-  width:clamp(60px,11vw,95px);
-  overflow:hidden;
-  border:1px solid rgba(200,169,110,0.12);
-  transition:opacity 0.8s ease;
-  opacity:0;
-}
-.ghost.show{opacity:1}
-.ghost img{
-  width:100%;
-  aspect-ratio:3/4;
-  object-fit:cover;
-  object-position:center top;
-  display:block;
-  filter:brightness(0.28) sepia(20%);
-  transition:opacity 0.6s ease;
-}
-.ghost-prev{
-  transform:perspective(500px) rotateY(22deg) scaleY(0.94);
-  transform-origin:right center;
-  margin-right:-4px;
-}
-.ghost-next{
-  transform:perspective(500px) rotateY(-22deg) scaleY(0.94);
-  transform-origin:left center;
-  margin-left:-4px;
-}
+
+
+
+
+
 
 /* Main photo frame */
-.photo-outer{
-  position:relative;
-  flex-shrink:0;
-  width:clamp(200px,36vw,310px);
-  z-index:2;
-}
-.photo-glow{
-  position:absolute;inset:-28px;border-radius:50%;
-  background:radial-gradient(ellipse at 50% 58%,rgba(200,140,40,0.22) 0%,transparent 68%);
-  pointer-events:none;z-index:0;
-  animation:candle 3.8s ease-in-out infinite;
-}
-.photo-border-svg{
-  position:absolute;inset:-7px;
-  width:calc(100% + 14px);height:calc(100% + 14px);
-  pointer-events:none;z-index:3;
-}
+
+
+
 
 /* ── THE FIX: use a fixed aspect-ratio container ── */
-.photo-inner{
-  position:relative;
-  z-index:1;
-  overflow:hidden;
-  border:1px solid rgba(200,169,110,0.45);
-  /* explicit aspect ratio so all slides have a reference height */
-  aspect-ratio:3/4;
-  width:100%;
-}
-.photo-inner::after{
-  content:'';position:absolute;inset:0;z-index:2;
-  background:linear-gradient(to bottom,transparent 55%,rgba(10,10,10,0.45));
-  pointer-events:none;
-}
+
+
 
 /* All slides fill the container absolutely */
-.slide{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  transition:opacity 1.1s cubic-bezier(0.4,0,0.2,1);
-  z-index:1;
-}
-.slide.active{
-  opacity:1;
-  z-index:2;
-}
-.slide img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  display:block;
-  filter:sepia(8%) contrast(1.04) brightness(0.97);
-  transition:transform 6s ease;
-  transform:scale(1.06);
-}
-.slide.active img{
-  transform:scale(1);
-}
+
+
+
+
 
 /* Slide dots */
-.slide-dots{
-  display:flex;gap:8px;justify-content:center;
-  margin-top:12px;position:relative;z-index:3;
-}
+
 .dot{
   width:5px;height:5px;border-radius:50%;
   background:rgba(200,169,110,0.2);
@@ -180,6 +102,16 @@ body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',se
 }
 .dot.active{background:var(--gold);transform:scale(1.4)}
 
+
+/* EVENTS (wedding + reception) */
+.events-row{display:flex;align-items:stretch;justify-content:center;gap:0;margin-top:28px;opacity:0;animation:rise 1s ease forwards 1.4s;width:100%;max-width:540px}
+.event-card{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 18px;position:relative}
+.event-card:first-child{border-right:1px solid var(--gline)}
+.event-type{font-family:'Cinzel',serif;font-size:8px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.event-day{font-family:'Playfair Display',serif;font-size:clamp(42px,7.5vw,72px);font-weight:400;font-style:italic;color:var(--gold-b);line-height:1}
+.event-month{font-family:'Cinzel',serif;font-size:clamp(13px,2vw,18px);font-weight:400;letter-spacing:4px;color:var(--white);text-transform:uppercase;margin-top:2px}
+.event-year{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,13px);font-weight:300;letter-spacing:5px;color:var(--muted);margin-top:2px}
+.event-venue{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(12px,1.5vw,15px);color:rgba(240,236,228,0.55);margin-top:8px;line-height:1.5;text-align:center}
 /* DATE */
 .date-row{margin-top:28px;display:flex;align-items:center;justify-content:center;opacity:0;animation:rise 1s ease forwards 1.4s}
 .date-day{font-family:'Playfair Display',serif;font-size:clamp(52px,9vw,84px);font-weight:400;font-style:italic;color:var(--gold-b);line-height:1}
@@ -204,6 +136,9 @@ body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',se
 .divider{width:100%;max-width:420px;height:1px;background:linear-gradient(90deg,transparent,var(--gline),transparent);margin:52px auto 0;opacity:0;animation:rise 1s ease forwards 2s}
 
 /* VENUE */
+.venues-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--gline);margin-top:0}
+@media(max-width:600px){.venues-wrap{grid-template-columns:1fr}}
+.venue-block{background:var(--bg);padding:48px 28px;text-align:center}
 .venue-section{padding:60px 24px 52px;max-width:640px;margin:0 auto;text-align:center}
 .section-tag{font-family:'Cinzel',serif;font-size:10px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .venue-name{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,3.2vw,32px);color:var(--white);font-weight:400}
@@ -233,9 +168,14 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
   50%{opacity:1}
 }
 @keyframes envOpen{
-  0%{opacity:1;transform:scale(1)}
-  60%{opacity:1;transform:scale(1.04)}
-  100%{opacity:0;transform:scale(1.08);pointer-events:none}
+  0%  {opacity:1;transform:scale(1) translateY(0);filter:blur(0px)}
+  15% {opacity:1;transform:scale(1.06) translateY(-6px);filter:blur(0px)}
+  60% {opacity:0.6;transform:scale(1.18) translateY(-16px);filter:blur(2px)}
+  100%{opacity:0;transform:scale(1.32) translateY(-32px);filter:blur(8px);pointer-events:none}
+}
+@keyframes envPageReveal{
+  0%  {opacity:0;transform:scale(0.94) translateY(24px);filter:blur(4px)}
+  100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0px)}
 }
 @keyframes candle{
   0%,100%{opacity:0.8;transform:scale(1)}
@@ -252,6 +192,301 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
   from{opacity:0;transform:translateY(16px)}
   to{opacity:1;transform:translateY(0)}
 }
+
+/* PERSONAL MESSAGE */
+.personal-msg{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(16px,2.2vw,20px);
+  color:rgba(240,236,228,0.55);
+  max-width:480px;
+  line-height:1.8;
+  text-align:center;
+  margin-bottom:20px;
+  opacity:0;
+  animation:rise 1s ease forwards 0.9s;
+}
+
+/* EVENTS ROW */
+.events-row{
+  display:flex;align-items:stretch;justify-content:center;
+  gap:0;margin-top:28px;
+  opacity:0;animation:rise 1s ease forwards 1.4s;
+  width:100%;max-width:580px;
+  border:1px solid var(--gline);
+}
+.event-card{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;padding:24px 16px 20px;
+  position:relative;cursor:default;
+  transition:background 0.4s ease, box-shadow 0.4s ease;
+}
+.event-card:first-child{border-right:1px solid var(--gline)}
+.event-card:hover{
+  background:rgba(200,169,110,0.06);
+  box-shadow:inset 0 0 40px rgba(200,169,110,0.08), 0 0 28px rgba(200,169,110,0.12);
+}
+.event-card:hover .event-day{color:var(--gold-b);text-shadow:0 0 20px rgba(232,201,138,0.35)}
+.event-type{
+  font-family:'Cinzel',serif;font-size:8px;font-weight:400;
+  letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;
+}
+.event-day{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,7vw,68px);
+  font-weight:400;font-style:italic;
+  color:var(--gold-b);line-height:1;
+  transition:color 0.4s, text-shadow 0.4s;
+}
+.event-month{
+  font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,16px);
+  font-weight:400;letter-spacing:4px;color:var(--white);
+  text-transform:uppercase;margin-top:4px;
+}
+.event-year{
+  font-family:'Cinzel',serif;font-size:clamp(8px,1.1vw,10px);
+  font-weight:300;letter-spacing:3px;color:var(--muted);margin-top:4px;
+  text-align:center;
+}
+.event-venue{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(12px,1.5vw,14px);
+  color:rgba(240,236,228,0.45);margin-top:8px;line-height:1.5;text-align:center;
+}
+/* per-event countdown */
+.event-cd{
+  display:flex;align-items:center;gap:6px;
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid rgba(200,169,110,0.15);
+  width:100%;justify-content:center;
+}
+.ecd-unit{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ecd-num{
+  font-family:'Playfair Display',serif;font-weight:400;
+  font-size:clamp(20px,3.5vw,30px);color:var(--gold-b);line-height:1;
+}
+.ecd-lbl{
+  font-family:'Cinzel',serif;font-size:7px;font-weight:300;
+  letter-spacing:3px;color:rgba(200,169,110,0.4);text-transform:uppercase;
+}
+.ecd-sep{font-size:16px;color:var(--gline);padding-bottom:10px}
+
+/* SILK TEXTURE on venue blocks */
+.venue-block{
+  background:var(--bg);
+  padding:48px 28px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.venue-block::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(
+      105deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(200,169,110,0.022) 3px,
+      rgba(200,169,110,0.022) 4px
+    ),
+    repeating-linear-gradient(
+      15deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(200,169,110,0.018) 3px,
+      rgba(200,169,110,0.018) 4px
+    );
+  pointer-events:none;
+  z-index:0;
+}
+.venue-block > *{position:relative;z-index:1}
+
+/* MOBILE FIXES */
+@media(max-width:560px){
+  .events-row{flex-direction:column}
+  .event-card:first-child{border-right:none;border-bottom:1px solid var(--gline)}
+  .venues-wrap{grid-template-columns:1fr}
+  .personal-msg{font-size:15px;padding:0 8px}
+  .ecd-num{font-size:22px}
+}
+
+/* ══ SLIDESHOW SCENE ══ */
+.slideshow-scene{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:720px;
+  opacity:0;
+  animation:rise 1.3s ease forwards 0.95s;
+  gap:0;
+}
+
+/* Ghost panels — blurred peek of adjacent photos */
+.ghost{
+  flex-shrink:0;
+  width:clamp(52px,9vw,82px);
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  transition:opacity 0.9s ease, transform 0.9s ease;
+}
+.ghost.show{opacity:1}
+.ghost img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+  filter:brightness(0.22) blur(1.5px) sepia(25%);
+  transition:all 0.7s ease;
+}
+.ghost-prev{
+  transform:perspective(600px) rotateY(28deg) scaleY(0.9) translateX(10px);
+  transform-origin:right center;
+  mask-image:linear-gradient(to right,transparent,rgba(0,0,0,0.7));
+  -webkit-mask-image:linear-gradient(to right,transparent,rgba(0,0,0,0.7));
+}
+.ghost-next{
+  transform:perspective(600px) rotateY(-28deg) scaleY(0.9) translateX(-10px);
+  transform-origin:left center;
+  mask-image:linear-gradient(to left,transparent,rgba(0,0,0,0.7));
+  -webkit-mask-image:linear-gradient(to left,transparent,rgba(0,0,0,0.7));
+}
+
+/* Main photo frame */
+.photo-outer{
+  position:relative;
+  flex-shrink:0;
+  width:clamp(210px,38vw,320px);
+  z-index:2;
+}
+
+/* Multi-layer decorative frame */
+.photo-glow{
+  position:absolute;
+  inset:-40px;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at 50% 55%,rgba(200,140,40,0.26) 0%,transparent 62%),
+    radial-gradient(ellipse at 30% 40%,rgba(200,160,60,0.1) 0%,transparent 50%);
+  pointer-events:none;
+  z-index:0;
+  animation:candle 4s ease-in-out infinite;
+}
+
+/* Outer ornamental ring */
+.photo-ring{
+  position:absolute;
+  inset:-14px;
+  border:1px solid rgba(200,169,110,0.2);
+  pointer-events:none;
+  z-index:3;
+}
+.photo-ring::before{
+  content:'';
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(200,169,110,0.1);
+}
+
+.photo-border-svg{
+  position:absolute;
+  inset:-9px;
+  width:calc(100% + 18px);
+  height:calc(100% + 18px);
+  pointer-events:none;
+  z-index:4;
+  filter:drop-shadow(0 0 6px rgba(200,169,110,0.3));
+}
+
+.photo-inner{
+  position:relative;
+  z-index:1;
+  overflow:hidden;
+  aspect-ratio:3/4;
+  width:100%;
+  box-shadow:
+    0 0 0 1px rgba(200,169,110,0.5),
+    0 0 0 4px rgba(10,10,10,0.9),
+    0 0 0 5px rgba(200,169,110,0.2),
+    0 20px 60px rgba(0,0,0,0.7),
+    0 0 40px rgba(200,140,40,0.12);
+}
+.photo-inner::after{
+  content:'';position:absolute;inset:0;z-index:10;
+  background:
+    linear-gradient(to bottom,rgba(200,169,110,0.04) 0%,transparent 15%,transparent 70%,rgba(10,10,10,0.5) 100%),
+    linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 50%);
+  pointer-events:none;
+}
+
+/* Slides — Ken Burns + crossfade */
+.slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  z-index:1;
+  overflow:hidden;
+}
+.slide.active{
+  opacity:1;
+  z-index:2;
+}
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+  filter:sepia(6%) contrast(1.05) brightness(0.95) saturate(1.05);
+  transform:scale(1.08);
+  transition:none;
+}
+.slide.active img{
+  transform:scale(1);
+  transition:transform 7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+/* Dots */
+.slide-dots{
+  display:flex;gap:10px;justify-content:center;
+  margin-top:14px;position:relative;z-index:5;
+}
+.dot{
+  position:relative;
+  width:28px;height:4px;border-radius:2px;
+  background:rgba(200,169,110,0.18);
+  border:none;
+  cursor:pointer;
+  overflow:hidden;
+  transition:background 0.3s;
+}
+.dot::after{
+  content:'';
+  position:absolute;
+  left:0;top:0;height:100%;width:0%;
+  background:var(--gold);
+  border-radius:2px;
+  transition:none;
+}
+.dot.active{background:rgba(200,169,110,0.25)}
+.dot.active::after{
+  width:100%;
+  transition:width 5s linear;
+}
+.dot.active.paused::after{
+  animation:none;
+  transition:none;
+}
+
+
+.btn-notify{font-family:'Cinzel',serif;font-size:9px;font-weight:300;letter-spacing:5px;text-transform:uppercase;padding:13px 26px;cursor:pointer;background:transparent;border:1px solid var(--gline);color:var(--muted);position:relative;overflow:hidden;transition:color 0.35s,border-color 0.35s}
+.btn-notify::before{content:'';position:absolute;inset:0;background:rgba(200,169,110,0.1);transform:scaleX(0);transform-origin:left;transition:transform 0.35s ease;z-index:-1}
+.btn-notify:hover{color:var(--gold);border-color:var(--gold)}
+.btn-notify:hover::before{transform:scaleX(1)}
+.btn-notify.granted{border-color:var(--gold);color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -280,6 +515,11 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
     <div class="malli-line"></div>
   </div>
 
+  <!-- PERSONAL MESSAGE -->
+  <p class="personal-msg reveal-inline">
+    Two families, one blessing — we cannot wait to celebrate with the people we love most.
+  </p>
+
   <!-- SLIDESHOW -->
   <div class="slideshow-scene">
 
@@ -289,6 +529,7 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
 
     <div class="photo-outer">
       <div class="photo-glow"></div>
+      <div class="photo-ring"></div>
       <svg class="photo-border-svg" viewBox="0 0 320 428" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="cg" x1="0" y1="0" x2="320" y2="428" gradientUnits="userSpaceOnUse">
@@ -320,14 +561,41 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
 
   </div>
 
-  <!-- DATE -->
-  <div class="date-row">
-    <span class="date-day">12</span>
-    <span class="date-sep">&#8212;</span>
-    <div class="date-month-year">
-      <span class="date-month">July</span>
-      <span class="date-year">2026</span>
+  <!-- EVENTS -->
+  <div class="events-row">
+
+    <!-- Wedding -->
+    <div class="event-card" id="ec-wedding">
+      <span class="event-type">Wedding</span>
+      <span class="event-day">12</span>
+      <span class="event-month">July 2026</span>
+      <span class="event-year">Sunday &nbsp;·&nbsp; 8:00 AM – 9:30 AM</span>
+      <span class="event-venue">Soundrapandiyan Kalyana Mandapam<br>Chennai</span>
+      <div class="event-cd" id="ecd-w">
+        <div class="ecd-unit"><span class="ecd-num" id="ew-d">--</span><span class="ecd-lbl">Days</span></div>
+        <span class="ecd-sep">·</span>
+        <div class="ecd-unit"><span class="ecd-num" id="ew-h">--</span><span class="ecd-lbl">Hrs</span></div>
+        <span class="ecd-sep">·</span>
+        <div class="ecd-unit"><span class="ecd-num" id="ew-m">--</span><span class="ecd-lbl">Mins</span></div>
+      </div>
     </div>
+
+    <!-- Reception -->
+    <div class="event-card" id="ec-reception">
+      <span class="event-type">Reception</span>
+      <span class="event-day">18</span>
+      <span class="event-month">July 2026</span>
+      <span class="event-year">Saturday &nbsp;·&nbsp; 12:00 PM – 7:00 PM</span>
+      <span class="event-venue">Kettimelam Mahal<br>Kalapatti, Coimbatore</span>
+      <div class="event-cd" id="ecd-r">
+        <div class="ecd-unit"><span class="ecd-num" id="er-d">--</span><span class="ecd-lbl">Days</span></div>
+        <span class="ecd-sep">·</span>
+        <div class="ecd-unit"><span class="ecd-num" id="er-h">--</span><span class="ecd-lbl">Hrs</span></div>
+        <span class="ecd-sep">·</span>
+        <div class="ecd-unit"><span class="ecd-num" id="er-m">--</span><span class="ecd-lbl">Mins</span></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- COUNTDOWN -->
@@ -343,23 +611,46 @@ footer{padding:36px 24px 52px;text-align:center;border-top:1px solid rgba(200,16
 
   <div class="actions">
     <a class="btn" href="#" onclick="addToCalendar(event)">+ Add to Calendar</a>
+    <button class="btn btn-notify" id="notify-btn" onclick="requestNotify()">&#128276; Notify Me</button>
   </div>
 
   <div class="divider"></div>
 </section>
 
-<!-- VENUE -->
-<div class="venue-section reveal" id="venue">
-  <p class="section-tag">The Venue</p>
-  <h2 class="venue-name">Soundrapandiyan Kalyana Mandapam</h2>
-  <p class="venue-addr">356, Kundrathur Main Rd, Madhanandapuram<br>Chennai, Tamil Nadu 600116</p>
-  <div class="map-frame">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.4!2d80.1495178!3d13.0263186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52610d4aea2709%3A0xa59d987333683bce!2sSoundrapandian%20Kalyana%20Mandapam!5e0!3m2!1sen!2sin!4v1"
-      loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Venue Map">
-    </iframe>
+<!-- VENUES -->
+<div class="venue-section reveal" id="venue" style="max-width:100%;padding:60px 0 0;">
+  <p class="section-tag" style="text-align:center;padding:0 24px 32px;">Celebrations</p>
+  <div class="venues-wrap">
+
+    <!-- Wedding venue -->
+    <div class="venue-block">
+      <p class="section-tag">Wedding &nbsp;·&nbsp; 12 July</p>
+      <h2 class="venue-name">Soundrapandiyan Kalyana Mandapam</h2>
+      <p class="venue-addr">356, Kundrathur Main Rd, Madhanandapuram<br>Chennai, Tamil Nadu 600116</p>
+      <div class="map-frame" style="margin-top:22px;">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.4!2d80.1495178!3d13.0263186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52610d4aea2709%3A0xa59d987333683bce!2sSoundrapandian%20Kalyana%20Mandapam!5e0!3m2!1sen!2sin!4v1"
+          loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Wedding Venue">
+        </iframe>
+      </div>
+      <a class="btn dir-btn" href="https://maps.google.com/?q=Soundrapandian+Kalyana+Mandapam+Chennai" target="_blank">Open in Maps &#8599;</a>
+    </div>
+
+    <!-- Reception venue -->
+    <div class="venue-block">
+      <p class="section-tag">Reception &nbsp;·&nbsp; 18 July</p>
+      <h2 class="venue-name">Kettimelam Mahal</h2>
+      <p class="venue-addr">Kalapatti<br>Coimbatore, Tamil Nadu</p>
+      <div class="map-frame" style="margin-top:22px;">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.5!2d77.0266!3d11.0509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba857d5a9a44b5b%3A0x1234567890abcdef!2sKettimelam+Mahal+Kalapatti!5e0!3m2!1sen!2sin!4v1"
+          loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Reception Venue">
+        </iframe>
+      </div>
+      <a class="btn dir-btn" href="https://maps.google.com/?q=Kettimelam+Mahal+Kalapatti+Coimbatore" target="_blank">Open in Maps &#8599;</a>
+    </div>
+
   </div>
-  <a class="btn dir-btn" href="https://maps.google.com/?q=Soundrapandian+Kalyana+Mandapam+Chennai" target="_blank">Open in Maps &#8599;</a>
 </div>
 
 <footer class="reveal">
@@ -439,54 +730,178 @@ function setGhosts(idx){
 function goTo(idx){
   if(busy || idx===cur) return;
   busy = true;
+
   var oldEl = document.getElementById('sl'+cur);
   var newEl = document.getElementById('sl'+idx);
   var dots  = document.querySelectorAll('.dot');
-  // step 1: make incoming visible but below outgoing
-  newEl.style.zIndex = '1';
-  oldEl.style.zIndex = '2';
-  newEl.style.opacity = '0';
-  newEl.style.transition = 'none';
-  newEl.classList.add('active');
-  // step 2: on next paint, crossfade
+  var forward = idx > cur || (cur===N-1 && idx===0);
+
+  // Position incoming slide off-screen in slide direction, hidden
+  newEl.style.cssText = 'position:absolute;inset:0;z-index:3;opacity:0;' +
+    'transform:scale(1.04);transition:none;overflow:hidden;';
+
+  // Force browser paint
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){
-      newEl.style.transition = 'opacity 1.1s cubic-bezier(0.4,0,0.2,1)';
-      newEl.style.opacity = '1';
-      oldEl.style.transition = 'opacity 1.1s cubic-bezier(0.4,0,0.2,1)';
-      oldEl.style.opacity = '0';
+
+      // Outgoing: fade + slight zoom-out
+      oldEl.style.transition = 'opacity 1.4s cubic-bezier(0.4,0,0.2,1), transform 1.4s cubic-bezier(0.4,0,0.2,1)';
+      oldEl.style.opacity    = '0';
+      oldEl.style.transform  = 'scale(0.97)';
+      oldEl.style.zIndex     = '2';
+
+      // Incoming: fade in + scale settle
+      newEl.style.transition = 'opacity 1.4s cubic-bezier(0.4,0,0.2,1), transform 1.4s cubic-bezier(0.4,0,0.2,1)';
+      newEl.style.opacity    = '1';
+      newEl.style.transform  = 'scale(1)';
+      newEl.style.zIndex     = '3';
+
+      // Trigger Ken Burns on incoming image
+      var inImg = newEl.querySelector('img');
+      if(inImg){
+        inImg.style.transition = 'none';
+        inImg.style.transform  = 'scale(1.08)';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            inImg.style.transition = 'transform 7s cubic-bezier(0.25,0.46,0.45,0.94)';
+            inImg.style.transform  = 'scale(1)';
+          });
+        });
+      }
     });
   });
-  // step 3: cleanup after transition
+
+  // Cleanup
   setTimeout(function(){
+    // Reset old
     oldEl.classList.remove('active');
     oldEl.style.cssText = '';
-    newEl.style.cssText = '';
+    var oldImg = oldEl.querySelector('img');
+    if(oldImg){ oldImg.style.cssText=''; }
+
+    // Settle new
     newEl.classList.add('active');
+    newEl.style.cssText = '';
+
+    // Update dots
     dots[cur].className = 'dot';
+    // restart progress bar on new active dot
+    dots[idx].className = 'dot';
+    void dots[idx].offsetWidth;
     dots[idx].className = 'dot active';
     cur = idx;
     setGhosts(cur);
     busy = false;
-  }, 1200);
+  }, 1500);
 }
 
 function next(){ goTo(mod(cur+1,N)); }
 
-function startTimer(){ timer = setInterval(next, 5000); }
-function stopTimer(){ clearInterval(timer); }
+function startTimer(){
+  // reset active dot progress bar by toggling active off/on
+  var dots = document.querySelectorAll('.dot');
+  if(dots[cur]){
+    dots[cur].classList.remove('active');
+    void dots[cur].offsetWidth; // force reflow to restart CSS transition
+    dots[cur].classList.add('active');
+  }
+  timer = setInterval(next, 5000);
+}
+function stopTimer(){
+  clearInterval(timer);
+  // pause dot progress bar
+  var dots = document.querySelectorAll('.dot');
+  if(dots[cur]) dots[cur].classList.add('paused');
+}
+function resumeTimer(){
+  var dots = document.querySelectorAll('.dot');
+  if(dots[cur]) dots[cur].classList.remove('paused');
+  startTimer();
+}
 
 init();
 startTimer();
 
-document.getElementById('photo-inner').addEventListener('mouseenter', stopTimer);
-document.getElementById('photo-inner').addEventListener('mouseleave', startTimer);
+// Pause on hover
+var pi = document.getElementById('photo-inner');
+pi.addEventListener('mouseenter', stopTimer);
+pi.addEventListener('mouseleave', resumeTimer);
+
+// ── TOUCH SWIPE ──
+var touchStartX = 0;
+var touchStartY = 0;
+var touchDist   = 0;
+pi.addEventListener('touchstart', function(e){
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  stopTimer();
+}, {passive:true});
+pi.addEventListener('touchmove', function(e){
+  touchDist = e.touches[0].clientX - touchStartX;
+}, {passive:true});
+pi.addEventListener('touchend', function(e){
+  var dx = e.changedTouches[0].clientX - touchStartX;
+  var dy = e.changedTouches[0].clientY - touchStartY;
+  // only act on horizontal swipes (dx > dy and threshold 40px)
+  if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){
+    if(dx < 0){ goTo(mod(cur+1,N)); }  // swipe left  → next
+    else       { goTo(mod(cur-1,N)); } // swipe right → prev
+  }
+  touchDist = 0;
+  resumeTimer();
+}, {passive:true});
+
+// ── KEYBOARD ARROWS ──
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight'){ stopTimer(); goTo(mod(cur+1,N)); setTimeout(resumeTimer,1600); }
+  if(e.key==='ArrowLeft') { stopTimer(); goTo(mod(cur-1,N)); setTimeout(resumeTimer,1600); }
+});
+
+// ── NOTIFY ME ──
+function requestNotify(){
+  if(!('Notification' in window)){
+    alert('Your browser does not support notifications.');
+    return;
+  }
+  Notification.requestPermission().then(function(perm){
+    if(perm==='granted'){
+      var btn = document.getElementById('notify-btn');
+      btn.textContent = '✓ You will be notified';
+      btn.classList.add('granted');
+      btn.disabled = true;
+      // Schedule check — on wedding morning, browser will fire if page is open
+      // Store target in localStorage; a daily SW-style check isn't possible without SW
+      localStorage.setItem('dp_notify','1');
+      // Show confirmation notification immediately
+      new Notification('Dharshan & Preetha 💛', {
+        body: 'You'll be reminded on the morning of 12 July 2026!',
+        icon: ''
+      });
+      // Poll each minute to fire on wedding day
+      setInterval(function(){
+        var now = new Date();
+        var wed = new Date('2026-07-12T06:00:00+05:30');
+        if(now >= wed && now < new Date(wed.getTime()+3600000) && localStorage.getItem('dp_notify_fired')!=='1'){
+          new Notification('Today is the day! 🎊', {
+            body: 'Dharshan & Preetha are getting married this morning. Wishing them a lifetime of joy!',
+          });
+          localStorage.setItem('dp_notify_fired','1');
+        }
+      }, 60000);
+    }
+  });
+}
 
 // ── ENVELOPE ──
 function openEnvelope(){
   var el=document.getElementById('envelope');
+  var pg=document.querySelector('.page');
   el.classList.add('open');
-  setTimeout(function(){ el.style.display='none'; startPetals(); },1050);
+  setTimeout(function(){
+    el.style.display='none';
+    pg.classList.add('revealed');
+    startPetals();
+  },950);
 }
 
 // ── COUNTDOWN ──
@@ -500,10 +915,33 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
+// Per-event countdowns
+function tickEvents(){
+  var wDiff = new Date('2026-07-12T08:00:00+05:30') - new Date();
+  var rDiff = new Date('2026-07-18T12:00:00+05:30') - new Date();
+  function fmt(diff, dId, hId, mId){
+    if(diff<=0){
+      document.getElementById(dId).textContent='00';
+      document.getElementById(hId).textContent='00';
+      document.getElementById(mId).textContent='00';
+      return;
+    }
+    document.getElementById(dId).textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById(hId).textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+    document.getElementById(mId).textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  }
+  fmt(wDiff,'ew-d','ew-h','ew-m');
+  fmt(rDiff,'er-d','er-h','er-m');
+}
+tickEvents(); setInterval(tickEvents,60000);
+
 // ── CALENDAR ──
 function addToCalendar(e){
   e.preventDefault();
-  window.open('https://www.google.com/calendar/render?action=TEMPLATE&text=Dharshan+%26+Preetha+Wedding&dates=20260712T023000Z/20260712T073000Z&details=Wedding+at+Soundrapandiyan+Kalyana+Mandapam,+Chennai&location=Soundrapandian+Kalyana+Mandapam,+Chennai','_blank');
+  var url1='https://www.google.com/calendar/render?action=TEMPLATE&text=Dharshan+%26+Preetha+Wedding&dates=20260712T023000Z/20260712T073000Z&details=Wedding+Ceremony&location=Soundrapandian+Kalyana+Mandapam,+Chennai';
+  var url2='https://www.google.com/calendar/render?action=TEMPLATE&text=Dharshan+%26+Preetha+Reception&dates=20260718T120000Z/20260718T160000Z&details=Reception+Celebration&location=Kettimelam+Mahal,+Kalapatti,+Coimbatore';
+  window.open(url1,'_blank');
+  setTimeout(function(){ window.open(url2,'_blank'); },800);
 }
 
 // ── PETALS ──
